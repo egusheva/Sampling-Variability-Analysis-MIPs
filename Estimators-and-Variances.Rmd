@@ -1,0 +1,133 @@
+---
+params:
+  includeVisualizations: TRUE
+  
+header-includes:
+  - \newcommand\latexcode[1]{#1}
+  
+title: "Estimators and variances"
+author: "Alexis Derumigny, Ema Gusheva"
+date: "`r Sys.Date()`"
+
+output: 
+  bookdown::word_document2:
+    toc: true
+    fig_caption: true
+
+knit: |
+  (function(input, ...) {
+    rmarkdown::render(
+      input,
+      output_file = paste0(
+        xfun::sans_ext(input), '-', Sys.Date(), '.docx'
+      ),
+      envir = globalenv()
+    )
+  })
+---
+
+<!-- The knit command modifies the output file to add automatically the date. -->
+<!-- see https://bookdown.org/yihui/rmarkdown-cookbook/custom-knit.html -->
+
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = FALSE, warning = FALSE)
+
+# Loading packages
+library(tidyverse)
+
+# Loading necessary functions
+source("functions.R")
+```
+
+```{r}
+list_datasets = list(
+  "cdlinks-baseline" = readxl::read_xlsx("data/CDLINKS baseline aggregated.xlsx"),
+  "engage-baseline" = readxl::read_xlsx("data/ENGAGE baseline aggregated.xlsx"),
+  "ecemf-baseline" = readxl::read_xlsx("data/ECEMF baseline aggregated.xlsx"),
+  "cdlinks-policy" = readxl::read_xlsx("data/CDLINKS policy aggregated.xlsx"),
+  "engage-policy" = readxl::read_xlsx("data/ENGAGE policy aggregated.xlsx"),
+  "ecemf-policy" = readxl::read_xlsx("data/ECEMF policy aggregated.xlsx")
+  )
+```
+
+```{r, echo=FALSE, results='asis', label="all estimation"}
+out <- list()
+i <- 1
+
+for (i_dataset in seq_along(list_datasets)) {
+
+  name_dataset <- names(list_datasets)[i_dataset]
+  dataset <- list_datasets[[i_dataset]]
+
+  # carriers present in THIS dataset
+  vec_carriers_ds <- dataset %>%
+    dplyr::pull(Carrier) %>%
+    as.character() %>%
+    trimws() %>%
+    unique() %>%
+    sort()
+
+  for (name_carrier in vec_carriers_ds) {
+
+    nameAnalysis.long <- paste0(name_dataset, " - ", name_carrier)
+
+    ds_parts <- strsplit(name_dataset, "-")[[1]]
+    ds_prefix <- substring(ds_parts[1], 1, 2)
+    ds_suffix <- substring(ds_parts[2], 1, 2)
+
+    # safer ID (avoids collisions like "He" etc.)
+    carrier_id <- gsub("[^A-Za-z0-9]+", "", tolower(name_carrier))
+
+    nameSection <- paste0(
+      "# ", nameAnalysis.long, " ",
+      "{#s:", ds_prefix, "-", ds_suffix, "-", carrier_id, "}"
+    )
+
+    result <- knitr::knit_expand(
+      file = "Estimators-and-Variances-section.Rmd",
+      name_dataset = name_dataset,
+      name_carrier = name_carrier,
+      nameSection  = nameSection
+    )
+
+    out[[i]] <- result
+    i <- i + 1
+  }
+}
+
+res <- if (interactive()) {
+  lapply(out, function(x) knitr::knit(text = x, envir = globalenv(), quiet = TRUE))
+} else {
+  lapply(out, function(x) knitr::knit_child(text = x, envir = globalenv(), quiet = TRUE))
+}
+
+cat(unlist(res), sep = "\n")
+```
+
+```{r}
+if (exists("all_results") && length(all_results) > 0) {
+
+  all_results_named <- lapply(all_results, function(df) {
+    df <- tibble::rownames_to_column(df, "Statistic")
+    return(df)
+  })
+  
+  combined_df <- dplyr::bind_rows(all_results_named, .id = "Dataset_Carrier") %>%
+    tidyr::pivot_longer(
+      cols = c("min", "max", "median", "range","mean", "iqr"),
+      names_to = "Measure",
+      values_to = "Value"
+    )
+  
+  combined_df <- combined_df %>%
+    tidyr::separate(Dataset_Carrier, into = c("Dataset", "Carrier"), sep = "_", remove = FALSE)
+  
+  if (!dir.exists("outputs")) dir.create("outputs", recursive = TRUE)
+  writexl::write_xlsx(combined_df, "outputs/all_results_combined.xlsx")
+  
+} else {
+  warning("⚠️ No `all_results` object found. Make sure each section stores `final_df` into `all_results`.")
+}
+```
+

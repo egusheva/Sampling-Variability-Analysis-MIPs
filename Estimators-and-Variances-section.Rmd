@@ -1,0 +1,87 @@
+
+{{nameSection}}
+ 
+```{r}
+name_dataset <- "{{name_dataset}}"
+name_carrier <- "{{name_carrier}}"
+
+dataset <- list_datasets[[name_dataset]]
+x <- dataset[dataset$Carrier == name_carrier, ]$`2050`
+n <- length(x)
+
+nameAnalysis.long <- paste0(name_dataset, " - ", name_carrier)
+```
+
+The sample size is n = `r n`
+
+```{r, fig.cap={{paste("\"Histogram -", nameAnalysis.long,"\"")}} }
+dataset[dataset$Carrier == name_carrier, ] |>
+  ggplot() +
+  geom_histogram(aes(x = `2050`), bins = 30)
+```
+
+```{r}
+vec_b = seq(3, n-1)
+
+matrix_estimates_V  = matrix(nrow = length(vec_b), ncol = 6)
+matrix_estimates_se = matrix(nrow = length(vec_b), ncol = 6)
+
+colnames(matrix_estimates_V)  <- c("min", "max", "median", "range", "mean", "iqr")
+colnames(matrix_estimates_se) <- c("min", "max", "median", "range", "mean", "iqr")
+
+for (i_b in 1:length(vec_b)) {
+  b = vec_b[i_b]
+  result = estimate_V_exhaustive(x = x, b = b)
+  matrix_estimates_V[i_b, ]  = result$estimates_V
+  matrix_estimates_se[i_b, ] = result$estimates_se
+}
+
+df_se  = data.frame(matrix_estimates_se, b = vec_b)
+df_var = data.frame(matrix_estimates_V,  b = vec_b)
+
+threshold = ceiling(n^(2/3))
+```
+
+```{r, fig.cap={{paste("\"Standard error -", nameAnalysis.long,"\"")}}}
+df_se |>
+  pivot_longer(cols = -b, names_to = "Estimator", values_to = "Value") |>
+  ggplot() +
+  geom_line(aes(x = b, y = Value)) +
+  geom_vline(xintercept = threshold) +
+  facet_wrap(vars(Estimator), scales = "free_y") +
+  ylab("Standard error") +
+  xlab("Subsample size")
+```
+
+
+```{r}
+summary_stats =
+  c("min"    = min(x),
+    "max"    = max(x),
+    "median" = median(x),
+    "range"  = max(x) - min(x),
+    "mean"   = mean(x),
+    "iqr"    = IQR(x, type = 7))
+
+final_df = rbind(
+  estimator = summary_stats,
+  std.error = df_se  |> filter(b == threshold) |> select(-b) |> as.numeric(),
+  var       = df_var |> filter(b == threshold) |> select(-b) |> as.numeric()
+) |> as.data.frame()
+```
+
+
+```{r}
+final_df |>
+  mutate(name = rownames(final_df)) |>
+  gt::gt(rowname_col = "name") |>
+  gt::fmt_number(columns = everything(), decimals = 5)
+
+if (!exists("all_results", envir = .GlobalEnv)) {
+  all_results <- list()
+}
+
+all_results[[paste(name_dataset, name_carrier, sep = "_")]] <- final_df
+assign("all_results", all_results, envir = .GlobalEnv)
+```
+
