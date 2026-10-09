@@ -82,4 +82,58 @@ The Python scripts use a vectorised implementation of `estimate_V_exhaustive()` 
 
 ### Complementary simulation with Beta distributions
 
-`Simulation_study_Preparation.Rmd` fits Beta distributions to the 2050 projections of each dataset and carrier, after rescaling them to [0, 1]. `Simulation_study.Rmd` uses Beta distributions with shapes chosen to reflect these fits, ensemble sizes n = 6, 9 and 12, and a Spearman's rho of 0 or 0.2 between models, and compares the average estimated standard error with the true one. Note that this simulation uses *b* = round(n^(2/3)) (3, 4 and 5), whereas the main analysis and Notes S1, S4 and S5
+`Simulation_study_Preparation.Rmd` fits Beta distributions to the 2050 projections of each dataset and carrier, after rescaling them to [0, 1]. `Simulation_study.Rmd` uses Beta distributions with shapes chosen to reflect these fits, ensemble sizes n = 6, 9 and 12, and a Spearman's rho of 0 or 0.2 between models, and compares the average estimated standard error with the true one. Note that this simulation uses *b* = round(n^(2/3)) (3, 4 and 5), whereas the main analysis and Notes S1, S4 and S5 use *b* = ⌈n^(2/3)⌉ (4, 5 and 6). Its results are not reported in the paper.
+
+---
+
+## Requirements
+
+R (≥ 4.1) with the following packages:
+
+```r
+install.packages(c("tidyverse", "rmarkdown", "bookdown", "knitr",
+                   "readxl", "writexl", "gt", "xfun",
+                   "copula", "pbapply", "fitdistrplus"))
+```
+
+`copula`, `pbapply` and `fitdistrplus` are needed only for the Beta simulation study.
+
+Python (≥ 3.9) with `numpy`, `scipy` and `pandas` for the Note S4 and S5 simulations.
+
+---
+
+## Usage
+
+### Main analysis
+
+1. Open `Estimators-and-Variances.Rmd` in RStudio (or knit from the command line).
+2. Knit the document:
+
+```r
+rmarkdown::render("Estimators-and-Variances.Rmd")
+```
+
+The output is a dated `.docx` report (e.g. `Estimators-and-Variances-2025-06-12.docx`) and an Excel summary file at `outputs/all_results_combined.xlsx`.
+
+`Estimators-and-Variances-section.Rmd` is a **template** used internally by the main report via `knitr::knit_expand()`. It does not need to be knitted directly.
+
+### Simulations
+
+From the repository root:
+
+```bash
+python NoteS4_simulation.py   # writes NoteS4_simulation_results.csv
+python NoteS5_simulation.py   # writes NoteS5_simulation_results.csv
+```
+
+Both scripts use a fixed random seed and reproduce the values in Tables S5 and S6. `Simulation_study_Preparation.Rmd` and `Simulation_study.Rmd` are knitted like the main report.
+
+---
+
+## Data
+
+The `data/` folder contains aggregated model projections from three model intercomparison projects, by energy carrier and model run, with a column for the year 2050. The original data are publicly available from the IIASA Scenario Explorer:
+
+- **CDLINKS** — [https://iiasa.ac.at/models-tools-data/cd-links-scenario-explorer](https://iiasa.ac.at/models-tools-data/cd-links-scenario-explorer)
+- **ENGAGE** — [https://iiasa.ac.at/models-tools-data/engage-scenario-explorer](https://iiasa.ac.at/models-tools-data/engage-scenario-explorer)
+- **ECEMF** — [https://ecemf.apps.ece.iiasa.ac.at/](https://ecemf.apps.ece.iiasa.ac.at/)
