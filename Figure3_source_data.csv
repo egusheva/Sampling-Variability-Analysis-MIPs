@@ -1,0 +1,162 @@
+panel,dataset,carrier,element,model,value_EJ,standard_error_EJ
+A,engage-baseline,Electricity,individual model projection,AIM/CGE V2.2,180.179,
+A,engage-baseline,Electricity,individual model projection,COFFEE 1.1,132.84859648895997,
+A,engage-baseline,Electricity,individual model projection,MESSAGEix-GLOBIOM 1.1,181.3184001791379,
+A,engage-baseline,Electricity,individual model projection,WITCH 5.0,188.776096109213,
+A,engage-baseline,Electricity,individual model projection,GEM-E3 V2021,183.64375999332404,
+A,engage-baseline,Electricity,individual model projection,REMIND-MAgPIE 2.1-4.2,230.3635,
+A,engage-baseline,Electricity,individual model projection,TIAM-ECN 1.1,154.91972723359817,
+A,engage-baseline,Electricity,individual model projection,IMAGE 3.0,127.7056015625,
+A,engage-baseline,Electricity,individual model projection,POLES-JRC ENGAGE,158.61122131347656,
+A,engage-baseline,Gases,individual model projection,AIM/CGE V2.2,54.9533,
+A,engage-baseline,Gases,individual model projection,COFFEE 1.1,134.1898411058208,
+A,engage-baseline,Gases,individual model projection,MESSAGEix-GLOBIOM 1.1,79.75408779426355,
+A,engage-baseline,Gases,individual model projection,WITCH 5.0,58.2315616095535,
+A,engage-baseline,Gases,individual model projection,GEM-E3 V2021,37.44062853760924,
+A,engage-baseline,Gases,individual model projection,REMIND-MAgPIE 2.1-4.2,43.8796,
+A,engage-baseline,Gases,individual model projection,TIAM-ECN 1.1,129.61466471541172,
+A,engage-baseline,Gases,individual model projection,IMAGE 3.0,80.8855078125,
+A,engage-baseline,Gases,individual model projection,POLES-JRC ENGAGE,50.30427551269531,
+A,engage-baseline,Heat,individual model projection,AIM/CGE V2.2,29.5743,
+A,engage-baseline,Heat,individual model projection,MESSAGEix-GLOBIOM 1.1,24.36327403076974,
+A,engage-baseline,Heat,individual model projection,GEM-E3 V2021,9.508067362162803,
+A,engage-baseline,Heat,individual model projection,REMIND-MAgPIE 2.1-4.2,11.0509,
+A,engage-baseline,Heat,individual model projection,TIAM-ECN 1.1,0.1289927449948136,
+A,engage-baseline,Heat,individual model projection,IMAGE 3.0,6.94484619140625,
+A,engage-baseline,Heat,individual model projection,POLES-JRC ENGAGE,20.99954414367676,
+A,engage-baseline,Hydrogen,individual model projection,AIM/CGE V2.2,0.0,
+A,engage-baseline,Hydrogen,individual model projection,COFFEE 1.1,0.286297652304,
+A,engage-baseline,Hydrogen,individual model projection,MESSAGEix-GLOBIOM 1.1,6.570343295373046,
+A,engage-baseline,Hydrogen,individual model projection,WITCH 5.0,7.57893961773113,
+A,engage-baseline,Hydrogen,individual model projection,GEM-E3 V2021,0.0,
+A,engage-baseline,Hydrogen,individual model projection,REMIND-MAgPIE 2.1-4.2,9.86,
+A,engage-baseline,Hydrogen,individual model projection,TIAM-ECN 1.1,25.00389310895776,
+A,engage-baseline,Hydrogen,individual model projection,IMAGE 3.0,2.881448974609375,
+A,engage-baseline,Hydrogen,individual model projection,POLES-JRC ENGAGE,11.292927742004396,
+A,engage-baseline,Liquids,individual model projection,AIM/CGE V2.2,163.1035,
+A,engage-baseline,Liquids,individual model projection,COFFEE 1.1,194.2705367847592,
+A,engage-baseline,Liquids,individual model projection,MESSAGEix-GLOBIOM 1.1,95.8217891443156,
+A,engage-baseline,Liquids,individual model projection,WITCH 5.0,132.352364732093,
+A,engage-baseline,Liquids,individual model projection,GEM-E3 V2021,163.67627269716252,
+A,engage-baseline,Liquids,individual model projection,REMIND-MAgPIE 2.1-4.2,156.1697,
+A,engage-baseline,Liquids,individual model projection,TIAM-ECN 1.1,120.36155935331502,
+A,engage-baseline,Liquids,individual model projection,IMAGE 3.0,88.81426725018676,
+A,engage-baseline,Liquids,individual model projection,POLES-JRC ENGAGE,94.89791870117188,
+A,engage-baseline,Solar,individual model projection,AIM/CGE V2.2,0.0,
+A,engage-baseline,Solar,individual model projection,COFFEE 1.1,0.0,
+A,engage-baseline,Solar,individual model projection,MESSAGEix-GLOBIOM 1.1,35.74353158383314,
+A,engage-baseline,Solar,individual model projection,TIAM-ECN 1.1,0.0021245208598376,
+A,engage-baseline,Solar,individual model projection,IMAGE 3.0,27.04298165512085,
+A,engage-baseline,Solar,individual model projection,POLES-JRC ENGAGE,6.359236717224121,
+A,engage-baseline,Solids,individual model projection,AIM/CGE V2.2,21.6652,
+A,engage-baseline,Solids,individual model projection,COFFEE 1.1,82.46439629653969,
+A,engage-baseline,Solids,individual model projection,MESSAGEix-GLOBIOM 1.1,40.38974169283292,
+A,engage-baseline,Solids,individual model projection,WITCH 5.0,38.1062556062079,
+A,engage-baseline,Solids,individual model projection,GEM-E3 V2021,84.71943179053562,
+A,engage-baseline,Solids,individual model projection,REMIND-MAgPIE 2.1-4.2,22.7152,
+A,engage-baseline,Solids,individual model projection,TIAM-ECN 1.1,79.76840517418948,
+A,engage-baseline,Solids,individual model projection,IMAGE 3.0,61.427599609375,
+A,engage-baseline,Solids,individual model projection,POLES-JRC ENGAGE,46.667598724365234,
+A,engage-baseline,Electricity,full-ensemble max,,230.3635,12.18296409612527
+A,engage-baseline,Electricity,full-ensemble median,,180.179,8.624331929487319
+A,engage-baseline,Electricity,full-ensemble min,,127.7056015625,5.992858361248889
+A,engage-baseline,Gases,full-ensemble max,,134.1898411058208,11.15148229681513
+A,engage-baseline,Gases,full-ensemble median,,58.2315616095535,8.987821487328441
+A,engage-baseline,Gases,full-ensemble min,,37.44062853760924,3.021519907345595
+A,engage-baseline,Heat,full-ensemble max,,29.5743,2.388796957474948
+A,engage-baseline,Heat,full-ensemble median,,11.0509,3.385900483601366
+A,engage-baseline,Heat,full-ensemble min,,0.1289927449948136,2.292619717532728
+A,engage-baseline,Hydrogen,full-ensemble max,,25.00389310895776,4.048179502799877
+A,engage-baseline,Hydrogen,full-ensemble median,,6.570343295373046,2.179468979324634
+A,engage-baseline,Hydrogen,full-ensemble min,,0.0,0.4467821431342549
+A,engage-baseline,Liquids,full-ensemble max,,194.2705367847592,9.023053712722128
+A,engage-baseline,Liquids,full-ensemble median,,132.352364732093,15.62940246185242
+A,engage-baseline,Liquids,full-ensemble min,,88.81426725018676,4.086502943173419
+A,engage-baseline,Solar,full-ensemble max,,35.74353158383314,5.320146361749803
+A,engage-baseline,Solar,full-ensemble median,,3.180680619041979,5.53318663522397
+A,engage-baseline,Solar,full-ensemble min,,0.0,0.0003656992848365016
+A,engage-baseline,Solids,full-ensemble max,,84.71943179053562,3.12486043890488
+A,engage-baseline,Solids,full-ensemble median,,46.66759872436523,9.927844298636188
+A,engage-baseline,Solids,full-ensemble min,,21.6652,3.579385686216254
+B,ecemf-policy,Electricity,individual model projection,IMAGE 3.2,5.08287255859375,
+B,ecemf-policy,Gases,individual model projection,IMAGE 3.2,1.07225735950469,
+B,ecemf-policy,Heat,individual model projection,IMAGE 3.2,0.978563517570495,
+B,ecemf-policy,Hydrogen,individual model projection,IMAGE 3.2,0.34209262189269,
+B,ecemf-policy,Liquids,individual model projection,IMAGE 3.2,2.52980588531494,
+B,ecemf-policy,Solids,individual model projection,IMAGE 3.2,2.89793908841374,
+B,ecemf-policy,Electricity,individual model projection,MESSAGEix-GLOBIOM 1.2,13.0975148179327,
+B,ecemf-policy,Gases,individual model projection,MESSAGEix-GLOBIOM 1.2,1.12867936930601,
+B,ecemf-policy,Heat,individual model projection,MESSAGEix-GLOBIOM 1.2,1.68074454061431,
+B,ecemf-policy,Hydrogen,individual model projection,MESSAGEix-GLOBIOM 1.2,0.0,
+B,ecemf-policy,Liquids,individual model projection,MESSAGEix-GLOBIOM 1.2,1.03576201867355,
+B,ecemf-policy,Solids,individual model projection,MESSAGEix-GLOBIOM 1.2,1.183344484693,
+B,ecemf-policy,Solids,individual model projection,PRIMES 2022,1.22139649455714,
+B,ecemf-policy,Liquids,individual model projection,PRIMES 2022,0.121623526946034,
+B,ecemf-policy,Hydrogen,individual model projection,PRIMES 2022,0.404920311094091,
+B,ecemf-policy,Heat,individual model projection,PRIMES 2022,0.98883339461626,
+B,ecemf-policy,Gases,individual model projection,PRIMES 2022,1.69432945263687,
+B,ecemf-policy,Electricity,individual model projection,PRIMES 2022,7.14749706932075,
+B,ecemf-policy,Electricity,individual model projection,PRIMES-Buildings 2022,7.26023744267452,
+B,ecemf-policy,Gases,individual model projection,PRIMES-Buildings 2022,1.02743647059432,
+B,ecemf-policy,Heat,individual model projection,PRIMES-Buildings 2022,0.814938900154633,
+B,ecemf-policy,Hydrogen,individual model projection,PRIMES-Buildings 2022,0.075177850749299,
+B,ecemf-policy,Liquids,individual model projection,PRIMES-Buildings 2022,0.234077929945387,
+B,ecemf-policy,Solids,individual model projection,PRIMES-Buildings 2022,0.79394907001038,
+B,ecemf-policy,Solids,individual model projection,REMIND 2.1,0.1135,
+B,ecemf-policy,Electricity,individual model projection,REMIND 2.1,9.0035,
+B,ecemf-policy,Gases,individual model projection,REMIND 2.1,0.3639,
+B,ecemf-policy,Heat,individual model projection,REMIND 2.1,1.4228,
+B,ecemf-policy,Hydrogen,individual model projection,REMIND 2.1,0.0,
+B,ecemf-policy,Liquids,individual model projection,REMIND 2.1,0.2504,
+B,ecemf-policy,Electricity,individual model projection,REMIND-Buildings 3.0.0,9.1138396,
+B,ecemf-policy,Gases,individual model projection,REMIND-Buildings 3.0.0,0.1469674,
+B,ecemf-policy,Heat,individual model projection,REMIND-Buildings 3.0.0,0.7516835,
+B,ecemf-policy,Hydrogen,individual model projection,REMIND-Buildings 3.0.0,0.0,
+B,ecemf-policy,Liquids,individual model projection,REMIND-Buildings 3.0.0,0.015275799999999,
+B,ecemf-policy,Solids,individual model projection,REMIND-Buildings 3.0.0,0.01337,
+B,ecemf-policy,Electricity,individual model projection,TIAM-ECN 1.2,11.7449,
+B,ecemf-policy,Gases,individual model projection,TIAM-ECN 1.2,2.8311,
+B,ecemf-policy,Heat,individual model projection,TIAM-ECN 1.2,0.8378,
+B,ecemf-policy,Hydrogen,individual model projection,TIAM-ECN 1.2,0.4774,
+B,ecemf-policy,Liquids,individual model projection,TIAM-ECN 1.2,0.5073,
+B,ecemf-policy,Solids,individual model projection,TIAM-ECN 1.2,0.3532,
+B,ecemf-policy,Electricity,individual model projection,WITCH 5.0,12.71832541524,
+B,ecemf-policy,Gases,individual model projection,WITCH 5.0,2.58740257229279,
+B,ecemf-policy,Liquids,individual model projection,WITCH 5.0,0.79470189442498,
+B,ecemf-policy,Solids,individual model projection,WITCH 5.0,0.329507756729595,
+B,ecemf-policy,Electricity,individual model projection,FORECAST-Buildings v1.0,6.43830771859,
+B,ecemf-policy,Heat,individual model projection,FORECAST-Buildings v1.0,1.335436976439,
+B,ecemf-policy,Hydrogen,individual model projection,FORECAST-Buildings v1.0,3.93408399999999e-06,
+B,ecemf-policy,Solids,individual model projection,FORECAST-Buildings v1.0,0.0,
+B,ecemf-policy,Liquids,individual model projection,FORECAST-Buildings v1.0,0.0,
+B,ecemf-policy,Gases,individual model projection,FORECAST-Buildings v1.0,0.0,
+B,ecemf-policy,Solids,individual model projection,Invert/EE-Lab 4.2,0.399526233246,
+B,ecemf-policy,Electricity,individual model projection,Invert/EE-Lab 4.2,7.584062876,
+B,ecemf-policy,Gases,individual model projection,Invert/EE-Lab 4.2,0.709719326,
+B,ecemf-policy,Heat,individual model projection,Invert/EE-Lab 4.2,1.799092711,
+B,ecemf-policy,Hydrogen,individual model projection,Invert/EE-Lab 4.2,0.0,
+B,ecemf-policy,Liquids,individual model projection,Invert/EE-Lab 4.2,0.7209254319999999,
+B,ecemf-policy,Liquids,individual model projection,Invert/Opt 1.0,0.190884553678187,
+B,ecemf-policy,Solids,individual model projection,Invert/Opt 1.0,0.0392709888325934,
+B,ecemf-policy,Electricity,individual model projection,Invert/Opt 1.0,7.95356533350246,
+B,ecemf-policy,Gases,individual model projection,Invert/Opt 1.0,0.323059963786817,
+B,ecemf-policy,Heat,individual model projection,Invert/Opt 1.0,1.32268734568037,
+B,ecemf-policy,Hydrogen,individual model projection,Invert/Opt 1.0,0.0,
+B,ecemf-policy,Electricity,full-ensemble max,,13.0975148179327,0.6033024929901901
+B,ecemf-policy,Electricity,full-ensemble median,,7.95356533350246,0.7572383827425642
+B,ecemf-policy,Electricity,full-ensemble min,,5.08287255859375,0.4303032440683149
+B,ecemf-policy,Gases,full-ensemble max,,2.8311,0.2788167968284505
+B,ecemf-policy,Gases,full-ensemble median,,1.02743647059432,0.2348357531588754
+B,ecemf-policy,Gases,full-ensemble min,,0.0,0.08936505272686188
+B,ecemf-policy,Heat,full-ensemble max,,1.799092711,0.08343539928833761
+B,ecemf-policy,Heat,full-ensemble median,,1.155760370148315,0.1399089796399194
+B,ecemf-policy,Heat,full-ensemble min,,0.7516835,0.03582858101777517
+B,ecemf-policy,Hydrogen,full-ensemble max,,0.4774,0.05831289200922214
+B,ecemf-policy,Hydrogen,full-ensemble median,,1.967041999999995e-06,0.06722716598946063
+B,ecemf-policy,Hydrogen,full-ensemble min,,0.0,1.239119988195024e-07
+B,ecemf-policy,Liquids,full-ensemble max,,2.52980588531494,0.3802722097742486
+B,ecemf-policy,Liquids,full-ensemble median,,0.2504,0.1449665636785897
+B,ecemf-policy,Liquids,full-ensemble min,,0.0,0.03444856628657321
+B,ecemf-policy,Solids,full-ensemble max,,2.89793908841374,0.4202735461438885
+B,ecemf-policy,Solids,full-ensemble median,,0.3532,0.1892313655542646
+B,ecemf-policy,Solids,full-ensemble min,,0.0,0.0332877699508163
