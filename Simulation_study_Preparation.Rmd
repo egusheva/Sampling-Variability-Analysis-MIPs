@@ -1,0 +1,266 @@
+---
+title: ''
+output: html_document
+date: "2026-09-22"
+---
+
+
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = FALSE, warning = FALSE)
+
+# Loading packages
+library(tidyverse)
+
+# Loading necessary functions
+source("functions.R")
+```
+
+
+```{r}
+list_datasets = list(
+  "cdlinks-baseline" = readxl::read_xlsx("data/CDLINKS baseline aggregated.xlsx"),
+  "engage-baseline" = readxl::read_xlsx("data/ENGAGE baseline aggregated.xlsx"),
+  "ecemf-baseline" = readxl::read_xlsx("data/ECEMF baseline aggregated.xlsx"),
+  "cdlinks-policy" = readxl::read_xlsx("data/CDLINKS policy aggregated.xlsx"),
+  "engage-policy" = readxl::read_xlsx("data/ENGAGE policy aggregated.xlsx"),
+  "ecemf-policy" = readxl::read_xlsx("data/ECEMF policy aggregated.xlsx")
+  )
+```
+
+
+```{r}
+for (i_dataset in 1:length(list_datasets)) {
+  
+  dataset = list_datasets[[i_dataset]]
+  
+  # carriers present in THIS dataset
+  vec_carriers_ds <- dataset %>%
+    dplyr::pull(Carrier) %>%
+    as.character() %>%
+    trimws() %>%
+    unique() %>%
+    sort()
+  
+  for (carrier in vec_carriers_ds) {
+    
+    dataset_carrier = dataset |>
+      filter(trimws(as.character(Carrier)) == carrier)
+
+    plt <- ggplot(dataset_carrier) +
+      geom_histogram(aes(x = `2050`)) +
+      labs(title = paste(names(list_datasets)[i_dataset], "-", carrier))
+  
+    print(plt)
+  }
+}
+```
+
+
+
+
+```{r}
+for (i_dataset in 1:length(list_datasets)) {
+  name_dataset = names(list_datasets)[i_dataset]
+  list_datasets[[i_dataset]] = 
+    list_datasets[[i_dataset]] |>
+    mutate(name_dataset = name_dataset)
+}
+
+standardize_column_names <- function(dataset) {
+  dataset |>
+    rename_with(tolower) |>
+    rename_with(trimws)
+}
+
+list_datasets <- lapply(
+  list_datasets,
+  standardize_column_names
+)
+
+merged_dataset = bind_rows(list_datasets)
+
+
+colnames(merged_dataset)
+```
+
+
+```{r}
+fit_beta_group <- function(data) {
+  x <- as.numeric(data[["2050"]])
+  x <- x[is.finite(x)]
+
+  n <- length(x)
+
+  if (n == 0L) {
+    return(data.frame(
+      n_observations = 0L,
+      minimum = NA_real_,
+      maximum = NA_real_,
+      shape1 = NA_real_,
+      shape2 = NA_real_,
+      fit_success = FALSE
+    ))
+  }
+
+  minimum <- min(x)
+  maximum <- max(x)
+
+  # A Beta distribution cannot be fitted to a constant sample.
+  if (n < 2L || minimum == maximum) {
+    return(data.frame(
+      n_observations = n,
+      minimum = minimum,
+      maximum = maximum,
+      shape1 = NA_real_,
+      shape2 = NA_real_,
+      fit_success = FALSE
+    ))
+  }
+
+  # Rescale observations to [0, 1].
+  x_scaled <- (x - minimum) / (maximum - minimum)
+
+  # Move observations slightly away from exactly 0 and 1.
+  x_scaled <- (x_scaled * (n - 1) + 0.5) / n
+
+  fit <- tryCatch(
+    fitdistrplus::fitdist(x_scaled, distr = "beta"),
+    error = function(e) NULL
+  )
+
+  if (is.null(fit)) {
+    return(data.frame(
+      n_observations = n,
+      minimum = minimum,
+      maximum = maximum,
+      shape1 = NA_real_,
+      shape2 = NA_real_,
+      fit_success = FALSE
+    ))
+  }
+
+  data.frame(
+    n_observations = n,
+    minimum = minimum,
+    maximum = maximum,
+    shape1 = unname(fit$estimate[["shape1"]]),
+    shape2 = unname(fit$estimate[["shape2"]]),
+    fit_success = TRUE
+  )
+}
+
+groups <- split(
+  merged_dataset,
+  list(
+    merged_dataset$carrier,
+    merged_dataset$name_dataset
+  ),
+  drop = TRUE
+)
+
+beta_fits_list <- lapply(
+  groups,
+  function(group_data) {
+    result <- fit_beta_group(group_data)
+
+    result$carrier <- group_data$carrier[1L]
+    result$name_dataset <- group_data$name_dataset[1L]
+
+    result
+  }
+)
+
+beta_fits <- bind_rows(beta_fits_list)
+
+rownames(beta_fits) <- NULL
+```
+
+
+
+```{r}
+# Keep only successful, finite, positive parameter estimates
+valid_fits <- beta_fits[
+  is.finite(beta_fits$shape1) &
+    is.finite(beta_fits$shape2) &
+    beta_fits$shape1 > 0 &
+    beta_fits$shape2 > 0,
+]
+
+# Identifier for each fitted distribution
+valid_fits$distribution <- paste(
+  valid_fits$carrier,
+  valid_fits$name_dataset,
+  sep = " - "
+)
+
+# Avoid evaluating exactly at 0 and 1 because the density can be infinite
+# at a boundary when shape1 < 1 or shape2 < 1.
+x_grid <- seq(1e-2, 1 - 1e-2, length.out = 1000L)
+
+density_list <- lapply(
+  seq_len(nrow(valid_fits)),
+  function(i) {
+    data.frame(
+      x = x_grid,
+      density = dbeta(
+        x_grid,
+        shape1 = valid_fits$shape1[i],
+        shape2 = valid_fits$shape2[i]
+      ),
+      carrier = valid_fits$carrier[i],
+      name_dataset = valid_fits$name_dataset[i],
+      distribution = valid_fits$distribution[i]
+    )
+  }
+)
+
+beta_density_data <- do.call(rbind, density_list)
+rownames(beta_density_data) <- NULL
+
+
+# Plot =================================
+
+ggplot(
+  beta_density_data,
+  aes(
+    x = x,
+    y = density,
+    colour = distribution,
+    group = distribution
+  )
+) +
+  geom_line(linewidth = 0.8, alpha = 0.8) +
+  # scale_y_continuous(limits = c(0, 4)) +
+  scale_x_continuous(
+    limits = c(0, 1),
+    breaks = seq(0, 1, by = 0.2)
+  ) +
+  labs(
+    title = "Fitted Beta distributions",
+    x = "Value on the [0,1] scale",
+    y = "Density",
+    colour = "Carrier and dataset"
+  ) +
+  theme_minimal() +
+  guides(colour = "none")
+```
+
+
+```{r}
+# On this plot, there is one point per dataset and per carrier
+# representing the fitted values of the parameters (shape1, shape2)
+ggplot(beta_fits) +
+  geom_point(aes(x = shape1, y = shape2))
+
+ggplot(beta_fits) +
+  geom_point(aes(x = minimum, y = maximum)) +
+  scale_x_log10() + scale_y_log10()
+```
+
+
+```{r}
+summary(beta_fits[, c("n_observations", "shape1", "shape2", "fit_success")])
+```
+
+

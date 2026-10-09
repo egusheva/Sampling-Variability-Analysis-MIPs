@@ -1,0 +1,227 @@
+---
+title: ''
+output: html_document
+date: "2026-09-22"
+---
+
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = FALSE, warning = FALSE)
+
+# Loading packages
+library(tidyverse)
+
+# Loading necessary functions
+source("functions.R")
+```
+
+
+
+```{r}
+set.seed(1)
+
+designs = expand.grid(
+  shape1 = c(0.5, 1, 1.5),
+  shape2 = c(0.7, 1, 1.7),
+  n = c(6, 9, 12),
+  correlation_rho = c(0, 0.2)
+)
+
+designs = designs |>
+  mutate(b = round(n^(2/3)))
+```
+
+
+```{r}
+compute_estimators <- function(x) {
+  c(min = min(x),
+    max = max(x),
+    median = median(x),
+    iqr = IQR(x, type = 7),
+    range = diff(range(x)),
+    mean = mean(x)
+  )
+}
+
+
+rdependent_beta <- function(
+    sample_size,
+    shape1,
+    shape2,
+    correlation_rho = 0
+) {
+  if (sample_size < 2L) {
+    stop("sample_size must be at least 2.")
+  }
+
+  if (shape1 <= 0 || shape2 <= 0) {
+    stop("shape1 and shape2 must be strictly positive.")
+  }
+  
+  param_copula = copula::iRho(copula::normalCopula(), rho = correlation_rho)
+  
+  gaussian_copula <- copula::normalCopula(
+    param = param_copula, dim = sample_size, dispstr = "ex")
+
+  # One sample from a sample_size-dimensional copula
+  u <- drop(copula::rCopula(n = 1L, copula = gaussian_copula))
+
+  # Transform the uniform margins to Beta margins
+  result = qbeta(p = u, shape1 = shape1, shape2 = shape2)
+  
+  return (result)
+}
+
+run_one_simulation <- function(
+    shape1,
+    shape2,
+    sample_size,
+    subsample_size,
+    correlation_rho
+) {
+  x <- rdependent_beta(
+    sample_size = sample_size, shape1 = shape1, shape2 = shape2,
+    correlation_rho = correlation_rho)
+
+  estimates <- compute_estimators(x)
+
+  subsampling_result <- estimate_V_exhaustive(x = x, b = subsample_size)
+
+  list(estimates = estimates,
+       estimated_se = subsampling_result$estimates_se,
+       estimated_variance = subsampling_result$estimates_V
+  )
+}
+
+run_scenario <- function(shape1,
+                         shape2,
+                         sample_size,
+                         subsample_size,
+                         correlation_rho,
+                         n_replications = 500L
+) {
+  estimator_names <- c("min", "max", "median", "range", "mean", "iqr")
+
+  estimated_variance <- estimated_se <- estimator_values <- matrix(
+    NA_real_,
+    nrow = n_replications,
+    ncol = length(estimator_names),
+    dimnames = list(NULL, estimator_names)
+  )
+
+  for (r in seq_len(n_replications)) {
+    simulation_result <- run_one_simulation(
+      shape1 = shape1,
+      shape2 = shape2,
+      sample_size = sample_size,
+      subsample_size = subsample_size,
+      correlation_rho = correlation_rho
+    )
+
+    estimator_values[r, ] <- 
+      simulation_result$estimates[estimator_names]
+
+    estimated_se[r, ] <- 
+      simulation_result$estimated_se[estimator_names]
+
+    estimated_variance[r, ] <- 
+      simulation_result$estimated_variance[estimator_names]
+  }
+  
+  if (any(!is.finite(estimator_values))) {
+    browser()
+  }
+  
+  if (any(!is.finite(estimated_se))) {
+    browser()
+  }
+  
+  if (any(!is.finite(estimated_variance))) {
+    browser()
+  }
+
+  true_se <- apply(estimator_values, 2L, sd, na.rm = TRUE)
+
+  true_variance <- apply(estimator_values, 2L, var, na.rm = TRUE)
+
+  mean_estimated_se <- apply(estimated_se, 2L, mean, na.rm = TRUE)
+
+  mean_estimated_variance <- apply(estimated_variance, 2L, mean, na.rm = TRUE)
+
+  result = data.frame(
+    estimator = estimator_names,
+    shape1 = shape1,
+    shape2 = shape2,
+    sample_size = sample_size,
+    subsample_size = subsample_size,
+    correlation_rho = correlation_rho,
+    true_se = true_se,
+    true_variance = true_variance,
+    mean_estimated_se = mean_estimated_se,
+    mean_estimated_variance = mean_estimated_variance,
+    row.names = NULL
+  )
+  
+  return (result)
+}
+```
+
+
+
+```{r running the simulations}
+pb = pbapply::startpb(max = nrow(designs))
+
+scenario_results_list <- lapply(
+  seq_len(nrow(designs)),
+  function(i) {
+    result <- run_scenario(
+      shape1 = designs$shape1[i],
+      shape2 = designs$shape2[i],
+      sample_size = designs$n[i],
+      subsample_size = designs$b[i],
+      correlation_rho = designs$correlation_rho[i],
+      n_replications = 500L
+    )
+
+    result$design_id <- i
+    
+    pbapply::setpb(pb, i)
+
+    return (result)
+  }
+)
+
+pbapply::closepb(pb)
+
+scenario_results <- bind_rows(scenario_results_list)
+
+rownames(scenario_results) <- NULL
+
+scenario_results = scenario_results |>
+  mutate(ratio_se = mean_estimated_se / true_se,
+         scenario = interaction(shape1, shape2, sep = ", " ),
+         n_b_ = paste0("n = ", sample_size, ", b = ", subsample_size),
+         rho_ = paste0("rho = ", correlation_rho) )
+```
+
+
+```{r, fig.width=8, fig.height=8}
+ggplot(
+  scenario_results,
+  aes(x = scenario, y = ratio_se, colour = estimator, group = estimator)
+) +
+  geom_hline(yintercept = 1, linetype = "dashed", colour = "grey40" ) +
+  geom_point(position = position_dodge(width = 0.5),
+             size = 2
+  ) +
+  facet_grid(vars(n_b_), vars(rho_)) +
+  labs(x = expression(paste("Scenario: (", alpha, ", ", beta, ")")),
+       y = "Mean estimated SE / true SE",
+       colour = "Estimator"
+  ) +
+  # theme_minimal() +
+  theme(axis.text.x = element_text(angle = 45, hjust = 1) )
+```
+
+
+
